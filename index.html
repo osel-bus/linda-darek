@@ -389,8 +389,15 @@
         };
 
         try {
-            const appId = typeof __app_id !== 'undefined' ? __app_id : 'airpods-linda';
-            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            const appId = 'airpods-linda';
+            const firebaseConfig = {
+                apiKey: "AIzaSy...",
+                authDomain: "tvuj-projekt.firebaseapp.com",
+                projectId: "tvuj-projekt",
+                storageBucket: "tvuj-projekt.appspot.com",
+                messagingSenderId: "123456789",
+                appId: "1:123456789:web:abcdef"
+            };
             
             if (!firebaseConfig) {
                 throw new Error("Chybí konfigurace. Běží lokálně.");
