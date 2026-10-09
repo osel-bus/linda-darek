@@ -281,7 +281,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, addDoc, deleteDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const TARGET_AMOUNT = 6500;
         
@@ -292,6 +292,7 @@
         let equalShareAmount = 0;
         let authUserId = null;
         let isAuthenticating = true;
+        let deleteContribution = null;
 
         const form = document.getElementById('contribution-form');
         const nameInput = document.getElementById('input-name');
@@ -385,7 +386,23 @@
                 nameEl.textContent = `> ${c.name}`;
                 const amountEl = document.createElement('span');
                 amountEl.innerHTML = amountText;
-                li.append(nameEl, amountEl);
+                const rightEl = document.createElement('span');
+                rightEl.className = "flex items-center gap-3";
+                rightEl.append(amountEl);
+
+                if (deleteContribution) {
+                    const delBtn = document.createElement('button');
+                    delBtn.type = 'button';
+                    delBtn.className = "text-gray-500 hover:text-red-400 text-sm transition-colors";
+                    delBtn.textContent = '[smazat]';
+                    delBtn.title = 'Odstranit záznam';
+                    delBtn.addEventListener('click', () => {
+                        if (confirm(`Opravdu odstranit záznam „${c.name}“?`)) deleteContribution(c.id, delBtn);
+                    });
+                    rightEl.append(delBtn);
+                }
+
+                li.append(nameEl, rightEl);
                 listEl.appendChild(li);
             });
         };
@@ -417,8 +434,8 @@
             onSnapshot(collectionPath, (snapshot) => {
                 loadingEl.classList.add('hidden');
                 contributions = [];
-                snapshot.forEach((doc) => {
-                    contributions.push({ id: doc.id, ...doc.data() });
+                snapshot.forEach((d) => {
+                    contributions.push({ id: d.id, ...d.data() });
                 });
                 updateCalculations();
                 renderList();
@@ -433,6 +450,19 @@
                 .then(() => { authUserId = auth.currentUser?.uid ?? null; })
                 .catch((error) => console.warn("Auth Error (pokračuji bez přihlášení):", error.code || error))
                 .finally(() => { isAuthenticating = false; });
+
+            deleteContribution = async (id, btn) => {
+                hideError();
+                if (isAuthenticating) await authReady;
+                btn.disabled = true;
+                try {
+                    await deleteDoc(doc(collectionPath, id));
+                } catch (err) {
+                    console.error("Delete Error: ", err);
+                    showError(`Nepodařilo se smazat záznam (${err.code || err.message}).`);
+                    btn.disabled = false;
+                }
+            };
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();

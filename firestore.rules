@@ -3,7 +3,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // Sbírka na dárek: kdokoli čte, přihlášený (anonymně) přidává, nikdo nemění ani nemaže
+    // Sbírka na dárek: kdokoli čte, přihlášený (anonymně) přidává, kdokoli může záznam smazat
     match /artifacts/airpods-linda/public/data/contributions/{docId} {
       allow read: if true;
       allow create: if request.auth != null
@@ -20,7 +20,9 @@ service cloud.firestore {
               && request.resource.data.amount > 0
               && request.resource.data.amount <= 6500)
         );
-      allow update, delete: if false;
+      // Smazat může kdokoli na stránce (anonymně přihlášený), např. omylem zadaný záznam
+      allow delete: if request.auth != null;
+      allow update: if false;
     }
   }
 }
