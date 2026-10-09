@@ -161,6 +161,32 @@
         input[type="radio"]:checked {
             border-color: #fff;
         }
+
+        .delete-btn {
+            flex-shrink: 0;
+            background: transparent;
+            color: #ff5f56;
+            border: 1px solid #ff5f56;
+            border-radius: 6px;
+            padding: 0.35rem 0.75rem;
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #ff5f56;
+            color: #1e1e1e;
+        }
+
+        .delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
@@ -375,34 +401,37 @@
 
             sorted.forEach(c => {
                 const li = document.createElement('li');
-                li.className = "flex flex-col sm:flex-row sm:justify-between py-3 border-b border-[#333] last:border-0";
+                li.className = "flex items-center gap-3 py-3 border-b border-[#333] last:border-0";
                 
                 let amountText = c.type === 'equal' 
                     ? `<span class="text-gray-400">Rovným dílem <span class="text-[#27c93f]">(~ ${equalShareAmount} Kč)</span></span>` 
                     : `<span class="text-white">Konkrétně: <span class="text-white font-bold">${Number(c.amount)} Kč</span></span>`;
 
                 const nameEl = document.createElement('span');
-                nameEl.className = "font-bold text-white mb-1 sm:mb-0";
+                nameEl.className = "font-bold text-white mb-1 sm:mb-0 break-all";
                 nameEl.textContent = `> ${c.name}`;
                 const amountEl = document.createElement('span');
                 amountEl.innerHTML = amountText;
-                const rightEl = document.createElement('span');
-                rightEl.className = "flex items-center gap-3";
-                rightEl.append(amountEl);
 
-                if (deleteContribution) {
-                    const delBtn = document.createElement('button');
-                    delBtn.type = 'button';
-                    delBtn.className = "text-gray-500 hover:text-red-400 text-sm transition-colors";
-                    delBtn.textContent = '[smazat]';
-                    delBtn.title = 'Odstranit záznam';
-                    delBtn.addEventListener('click', () => {
-                        if (confirm(`Opravdu odstranit záznam „${c.name}“?`)) deleteContribution(c.id, delBtn);
-                    });
-                    rightEl.append(delBtn);
-                }
+                // Name and amount share one block; delete button sits at the row's end
+                const infoEl = document.createElement('div');
+                infoEl.className = "flex flex-col sm:flex-row sm:justify-between sm:items-center gap-x-4 flex-1 min-w-0";
+                infoEl.append(nameEl, amountEl);
 
-                li.append(nameEl, rightEl);
+                const delBtn = document.createElement('button');
+                delBtn.type = 'button';
+                delBtn.className = "delete-btn";
+                delBtn.textContent = 'Smazat';
+                delBtn.title = 'Odstranit záznam';
+                delBtn.addEventListener('click', () => {
+                    if (!deleteContribution) {
+                        showError("Mazání není dostupné, systém se ještě načítá.");
+                        return;
+                    }
+                    if (confirm(`Opravdu odstranit záznam „${c.name}“?`)) deleteContribution(c.id, delBtn);
+                });
+
+                li.append(infoEl, delBtn);
                 listEl.appendChild(li);
             });
         };
