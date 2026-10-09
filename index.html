@@ -280,7 +280,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const TARGET_AMOUNT = 6500;
@@ -378,12 +378,14 @@
                 
                 let amountText = c.type === 'equal' 
                     ? `<span class="text-gray-400">Rovným dílem <span class="text-[#27c93f]">(~ ${equalShareAmount} Kč)</span></span>` 
-                    : `<span class="text-white">Konkrétně: <span class="text-white font-bold">${c.amount} Kč</span></span>`;
+                    : `<span class="text-white">Konkrétně: <span class="text-white font-bold">${Number(c.amount)} Kč</span></span>`;
 
-                li.innerHTML = `
-                    <span class="font-bold text-white mb-1 sm:mb-0">> ${c.name}</span>
-                    <span>${amountText}</span>
-                `;
+                const nameEl = document.createElement('span');
+                nameEl.className = "font-bold text-white mb-1 sm:mb-0";
+                nameEl.textContent = `> ${c.name}`;
+                const amountEl = document.createElement('span');
+                amountEl.innerHTML = amountText;
+                li.append(nameEl, amountEl);
                 listEl.appendChild(li);
             });
         };
@@ -411,47 +413,32 @@
             // Following strictly the Rule 1 for paths
             const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'contributions');
 
-            const initApp = async () => {
-                try {
-                    if (typeof __initial_auth_token !== 'undefined') {
-                        await signInWithCustomToken(auth, __initial_auth_token);
-                    } else {
-                        await signInAnonymously(auth);
-                    }
-                    
-                    authUserId = auth.currentUser?.uid;
-                    isAuthenticating = false;
-                    
-                    onSnapshot(collectionPath, (snapshot) => {
-                        loadingEl.classList.add('hidden');
-                        contributions = [];
-                        snapshot.forEach((doc) => {
-                            contributions.push({ id: doc.id, ...doc.data() });
-                        });
-                        updateCalculations();
-                        renderList();
-                    }, (error) => {
-                        console.error("Firebase Error:", error);
-                        showError("Chyba synchronizace dat.");
-                        loadingEl.textContent = "Chyba spojení.";
-                    });
+            // Data listener runs independently of auth, so the list loads even if sign-in fails
+            onSnapshot(collectionPath, (snapshot) => {
+                loadingEl.classList.add('hidden');
+                contributions = [];
+                snapshot.forEach((doc) => {
+                    contributions.push({ id: doc.id, ...doc.data() });
+                });
+                updateCalculations();
+                renderList();
+            }, (error) => {
+                console.error("Firebase Error:", error);
+                showError(`Chyba synchronizace dat (${error.code || error.message}).`);
+                loadingEl.textContent = "Chyba spojení.";
+            });
 
-                } catch (error) {
-                    console.error("Auth Error:", error);
-                    showError("Chyba přihlášení.");
-                }
-            };
-
-            initApp();
+            // Anonymous sign-in is optional; if Authentication isn't enabled in the project, continue without it
+            const authReady = signInAnonymously(auth)
+                .then(() => { authUserId = auth.currentUser?.uid ?? null; })
+                .catch((error) => console.warn("Auth Error (pokračuji bez přihlášení):", error.code || error))
+                .finally(() => { isAuthenticating = false; });
 
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 hideError();
 
-                if (isAuthenticating || !authUserId) {
-                    showError("Prosím čekej, systém se načítá...");
-                    return;
-                }
+                if (isAuthenticating) await authReady;
 
                 const name = nameInput.value.trim();
                 const type = document.querySelector('input[name="contribution-type"]:checked').value;
@@ -488,13 +475,14 @@
                     
                     form.reset();
                     amountContainer.classList.add('hidden');
+                    amountInput.required = false;
                     
                 } catch (err) {
                     console.error("Add Error: ", err);
-                    showError("Nepodařilo se odeslat data.");
+                    showError(`Nepodařilo se odeslat data (${err.code || err.message}).`);
                 } finally {
                     submitBtn.disabled = false;
-                    submitBtn.textContent = "ODESLAT";
+                    submitBtn.textContent = "Odeslat";
                 }
             });
 
