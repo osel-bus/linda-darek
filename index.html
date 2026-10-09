@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirPods Fund - Dárek Lindě k 30</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --mac-bg: #1e1e1e;
+            --mac-text: #e5e5e5;
+        }
+        
+        body {
+            background-color: #000;
+            color: var(--mac-text);
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+
+        .mac-window {
+            background-color: var(--mac-bg);
+            border-radius: 10px;
+            width: 95%;
+            max-width: 800px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+
+        .mac-titlebar {
+            background-color: #2d2d2d;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            position: relative;
+            border-bottom: 1px solid #111;
+        }
+
+        .mac-buttons {
+            display: flex;
+            gap: 8px;
+            position: absolute;
+            left: 16px;
+        }
+
+        .mac-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .btn-close { background-color: #ff5f56; }
+        .btn-min { background-color: #ffbd2e; }
+        .btn-max { background-color: #27c93f; }
+
+        .mac-title {
+            width: 100%;
+            text-align: center;
+            color: #999;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .mac-content {
+            padding: 40px 32px;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .ascii-art {
+            white-space: pre;
+            line-height: 1.15;
+            animation: bounce 3s infinite ease-in-out;
+            color: #ffffff;
+            font-size: 15px; /* Larger font size for more detail */
+            text-align: center;
+            display: inline-block;
+            text-shadow: 0 0 5px rgba(255,255,255,0.2);
+        }
+
+        .terminal-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid #444;
+            border-radius: 6px;
+            color: #fff;
+            outline: none;
+            padding: 0.75rem 1rem;
+            font-family: inherit;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        
+        .terminal-input:focus {
+            border-color: #888;
+            background: rgba(255,255,255,0.08);
+        }
+
+        .terminal-button {
+            background: #e5e5e5;
+            color: #1e1e1e;
+            border: none;
+            cursor: pointer;
+            padding: 0.75rem 2rem;
+            border-radius: 6px;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .terminal-button:hover {
+            background: #ffffff;
+            transform: translateY(-1px);
+        }
+
+        .terminal-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            background-color: transparent;
+            margin: 0;
+            font: inherit;
+            color: currentColor;
+            width: 1.25em;
+            height: 1.25em;
+            border: 1px solid #666;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+        }
+
+        input[type="radio"]::before {
+            content: "";
+            width: 0.65em;
+            height: 0.65em;
+            border-radius: 50%;
+            background-color: #fff;
+            transform: scale(0);
+            transition: 120ms transform ease-in-out;
+        }
+
+        input[type="radio"]:checked::before {
+            transform: scale(1);
+        }
+        
+        input[type="radio"]:checked {
+            border-color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mac-window">
+        <div class="mac-titlebar">
+            <div class="mac-buttons">
+                <div class="mac-btn btn-close"></div>
+                <div class="mac-btn btn-min"></div>
+                <div class="mac-btn btn-max"></div>
+            </div>
+            <div class="mac-title">Terminal - bash</div>
+        </div>
+        
+        <div class="mac-content">
+            <header class="text-center w-full mb-12 overflow-x-auto">
+                <div class="ascii-art font-bold mb-6">
+        .------------------------------------------------------.
+       /                                                        \
+      /                                                          \
+     |                                                            |
+     +============================================================+
+                .---------.                  .---------.
+              /  _ .---.   \               /   .---. _  \
+             |  ( )|   |    |             |    |   |( )  |
+             |  ___|   |    |             |    |   |___  |
+              \    `---'   /               \   `---'    /
+                `---------´                  `---------´
+                   |   |                        |   |
+                   |   |                        |   |
+                   |   |                        |   |
+                   |___|                        |___|
+       .------------------------------------------------------.
+      /                                                        \
+     /                                                          \
+    |                                                            |
+    |                                                            |
+    |                                                            |
+    |                      FUN DING DUNGU                        |
+    |                         PŘIHREJ!                           |
+    |                                                            |
+    |                                                            |
+    |                                                            |
+     \                                                          /
+      `--------------------------------------------------------'
+                </div>
+                <div class="text-gray-400 uppercase tracking-widest text-lg font-bold">Dárek Lindě k 30</div>
+            </header>
+
+            <main class="w-full flex flex-col gap-12 max-w-2xl mx-auto">
+                
+                <section>
+                    <form id="contribution-form" class="flex flex-col gap-6 bg-[#252525] p-6 rounded-lg border border-[#333]">
+                        <div id="error-message" class="hidden text-red-400 font-bold text-sm bg-red-900/20 p-4 rounded-md border border-red-900/50"></div>
+
+                        <div class="flex flex-col gap-2">
+                            <label for="input-name" class="text-gray-400 font-semibold">Jméno:</label>
+                            <input type="text" id="input-name" class="terminal-input" required autocomplete="off" placeholder="Zadej své jméno...">
+                        </div>
+
+                        <div class="flex flex-col gap-4">
+                            <label class="text-gray-400 font-semibold">Přispěju:</label>
+                            <div class="flex flex-col gap-3 pl-2">
+                                <label class="flex items-center gap-3 cursor-pointer text-gray-200 hover:text-white transition-colors">
+                                    <input type="radio" name="contribution-type" value="equal" checked>
+                                    <span>Rovným dílem (dopočítá se)</span>
+                                </label>
+                                <label class="flex items-center gap-3 cursor-pointer text-gray-200 hover:text-white transition-colors">
+                                    <input type="radio" name="contribution-type" value="specific">
+                                    <span>Konkrétní částka</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="specific-amount-container" class="flex flex-col gap-2 hidden pl-2">
+                            <label for="input-amount" class="text-gray-400 text-sm">Zadej částku (Kč):</label>
+                            <input type="number" id="input-amount" class="terminal-input" min="1" max="6500" placeholder="Např. 1000">
+                        </div>
+
+                        <button type="submit" id="submit-btn" class="terminal-button mt-4 w-full sm:w-auto self-start">Odeslat</button>
+                    </form>
+                </section>
+
+                <section class="flex flex-col gap-8">
+                    <div class="bg-[#1a1a1a] p-6 rounded-lg border border-[#333]">
+                        <h2 class="text-xl font-bold mb-6 text-white uppercase border-b border-[#333] pb-3 tracking-wide">Stav sbírky</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-y-4 gap-x-8 text-base">
+                            <div class="text-gray-400">Cílová částka:</div>
+                            <div class="font-mono text-white">6500 Kč</div>
+                            
+                            <div class="text-gray-400">Vybráno konkrétně:</div>
+                            <div id="ui-specific-sum" class="font-mono text-white">0 Kč</div>
+                            
+                            <div class="text-gray-400">Zbývá pokrýt:</div>
+                            <div id="ui-remaining" class="font-mono text-white">6500 Kč</div>
+
+                            <div class="text-gray-400">Počet lidí 'rovným dílem':</div>
+                            <div id="ui-equal-count" class="font-mono text-white">0</div>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-[#333] flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+                            <div class="text-gray-300 font-bold uppercase tracking-wide">Aktuální rovný díl:</div>
+                            <div id="ui-equal-share" class="font-mono font-bold text-2xl text-[#27c93f]">0 Kč / osobu</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h2 class="text-lg font-bold mb-4 text-gray-400 uppercase tracking-wide">Seznam přispěvatelů</h2>
+                        <div id="loading-indicator" class="animate-pulse text-gray-500">Načítám data z Firebase...</div>
+                        <ul id="contributions-list" class="flex flex-col gap-2 empty:hidden font-mono text-sm sm:text-base">
+                            <!-- List will be populated via JS -->
+                        </ul>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const TARGET_AMOUNT = 6500;
+        
+        let contributions = [];
+        let specificSum = 0;
+        let equalShareCount = 0;
+        let remainingAmount = TARGET_AMOUNT;
+        let equalShareAmount = 0;
+        let authUserId = null;
+        let isAuthenticating = true;
+
+        const form = document.getElementById('contribution-form');
+        const nameInput = document.getElementById('input-name');
+        const typeRadios = document.getElementsByName('contribution-type');
+        const amountContainer = document.getElementById('specific-amount-container');
+        const amountInput = document.getElementById('input-amount');
+        const errorDiv = document.getElementById('error-message');
+        const submitBtn = document.getElementById('submit-btn');
+        const listEl = document.getElementById('contributions-list');
+        const loadingEl = document.getElementById('loading-indicator');
+
+        const uiSpecificSum = document.getElementById('ui-specific-sum');
+        const uiRemaining = document.getElementById('ui-remaining');
+        const uiEqualCount = document.getElementById('ui-equal-count');
+        const uiEqualShare = document.getElementById('ui-equal-share');
+
+        // Toggle specific amount input
+        typeRadios.forEach(radio => {
+            radio.addEventListener('change', (e) => {
+                if (e.target.value === 'specific') {
+                    amountContainer.classList.remove('hidden');
+                    amountInput.required = true;
+                    amountInput.focus();
+                } else {
+                    amountContainer.classList.add('hidden');
+                    amountInput.required = false;
+                    amountInput.value = '';
+                }
+            });
+        });
+
+        const showError = (msg) => {
+            errorDiv.textContent = msg;
+            errorDiv.classList.remove('hidden');
+        };
+
+        const hideError = () => {
+            errorDiv.classList.add('hidden');
+        };
+
+        const updateCalculations = () => {
+            specificSum = 0;
+            equalShareCount = 0;
+
+            contributions.forEach(c => {
+                if (c.type === 'specific') {
+                    specificSum += Number(c.amount);
+                } else if (c.type === 'equal') {
+                    equalShareCount++;
+                }
+            });
+
+            remainingAmount = Math.max(0, TARGET_AMOUNT - specificSum);
+            
+            if (equalShareCount > 0) {
+                equalShareAmount = Math.ceil(remainingAmount / equalShareCount);
+            } else {
+                equalShareAmount = 0;
+            }
+
+            uiSpecificSum.textContent = `${specificSum} Kč`;
+            uiRemaining.textContent = `${remainingAmount} Kč`;
+            uiEqualCount.textContent = equalShareCount;
+            uiEqualShare.textContent = equalShareCount > 0 ? `${equalShareAmount} Kč / osobu` : `0 Kč / osobu`;
+        };
+
+        const renderList = () => {
+            listEl.innerHTML = '';
+            
+            const sorted = [...contributions].sort((a, b) => {
+                const timeA = a.timestamp ? a.timestamp.toMillis() : Date.now();
+                const timeB = b.timestamp ? b.timestamp.toMillis() : Date.now();
+                return timeB - timeA; // Newest first
+            });
+
+            if (sorted.length === 0) {
+                listEl.innerHTML = '<li class="text-gray-500 py-4 italic">Zatím žádné záznamy. Buď první!</li>';
+                return;
+            }
+
+            sorted.forEach(c => {
+                const li = document.createElement('li');
+                li.className = "flex flex-col sm:flex-row sm:justify-between py-3 border-b border-[#333] last:border-0";
+                
+                let amountText = c.type === 'equal' 
+                    ? `<span class="text-gray-400">Rovným dílem <span class="text-[#27c93f]">(~ ${equalShareAmount} Kč)</span></span>` 
+                    : `<span class="text-white">Konkrétně: <span class="text-white font-bold">${c.amount} Kč</span></span>`;
+
+                li.innerHTML = `
+                    <span class="font-bold text-white mb-1 sm:mb-0">> ${c.name}</span>
+                    <span>${amountText}</span>
+                `;
+                listEl.appendChild(li);
+            });
+        };
+
+        try {
+            const appId = typeof __app_id !== 'undefined' ? __app_id : 'airpods-linda';
+            const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+            
+            if (!firebaseConfig) {
+                throw new Error("Chybí konfigurace. Běží lokálně.");
+            }
+
+            const app = initializeApp(firebaseConfig);
+            const db = getFirestore(app);
+            const auth = getAuth(app);
+            
+            // Following strictly the Rule 1 for paths
+            const collectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'contributions');
+
+            const initApp = async () => {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined') {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    
+                    authUserId = auth.currentUser?.uid;
+                    isAuthenticating = false;
+                    
+                    onSnapshot(collectionPath, (snapshot) => {
+                        loadingEl.classList.add('hidden');
+                        contributions = [];
+                        snapshot.forEach((doc) => {
+                            contributions.push({ id: doc.id, ...doc.data() });
+                        });
+                        updateCalculations();
+                        renderList();
+                    }, (error) => {
+                        console.error("Firebase Error:", error);
+                        showError("Chyba synchronizace dat.");
+                        loadingEl.textContent = "Chyba spojení.";
+                    });
+
+                } catch (error) {
+                    console.error("Auth Error:", error);
+                    showError("Chyba přihlášení.");
+                }
+            };
+
+            initApp();
+
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                hideError();
+
+                if (isAuthenticating || !authUserId) {
+                    showError("Prosím čekej, systém se načítá...");
+                    return;
+                }
+
+                const name = nameInput.value.trim();
+                const type = document.querySelector('input[name="contribution-type"]:checked').value;
+                let amount = 0;
+
+                if (!name) {
+                    showError("Zadej své jméno.");
+                    return;
+                }
+
+                if (type === 'specific') {
+                    amount = Number(amountInput.value);
+                    if (isNaN(amount) || amount <= 0) {
+                        showError("Částka musí být větší než 0.");
+                        return;
+                    }
+                    if (specificSum + amount > TARGET_AMOUNT) {
+                        showError(`Nelze přidat tolik. Z cílové částky zbývá pokrýt max ${TARGET_AMOUNT - specificSum} Kč.`);
+                        return;
+                    }
+                }
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = "ODESÍLÁM...";
+
+                try {
+                    await addDoc(collectionPath, {
+                        name: name,
+                        type: type,
+                        amount: type === 'specific' ? amount : null,
+                        timestamp: serverTimestamp(),
+                        userId: authUserId
+                    });
+                    
+                    form.reset();
+                    amountContainer.classList.add('hidden');
+                    
+                } catch (err) {
+                    console.error("Add Error: ", err);
+                    showError("Nepodařilo se odeslat data.");
+                } finally {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = "ODESLAT";
+                }
+            });
+
+        } catch (e) {
+            console.error(e);
+            loadingEl.textContent = "Režim bez ukládání (lokální test)";
+            showError("Lokální režim. Data nebudou uložena napříč zařízeními.");
+        }
+    </script>
+</body>
+</html>
